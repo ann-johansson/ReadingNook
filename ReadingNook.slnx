@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="ReadingNook.API/ReadingNook.API.csproj" />
+  <Project Path="ReadingNook.Application/ReadingNook.Application.csproj" />
+  <Project Path="ReadingNook.Domain/ReadingNook.Domain.csproj" />
+  <Project Path="ReadingNook.Infrastructure/ReadingNook.Infrastructure.csproj" />
+</Solution>
