@@ -1,0 +1,6 @@
+@ReadingNook.API_HostAddress = http://localhost:5036
+
+GET {{ReadingNook.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
