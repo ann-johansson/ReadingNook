@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using ReadingNook.Application.Books.Commands.CreateBook;
 using ReadingNook.Domain.Interfaces;
 using ReadingNook.Infrastructure.Data;
 using ReadingNook.Infrastructure.Repositories;
@@ -21,6 +22,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // Dependency injection for repositories
 builder.Services.AddScoped<IBookRepository, BookRepository>();
+
+builder.Services.AddMediatR(cfg =>
+    cfg.RegisterServicesFromAssembly(typeof(CreateBookCommand).Assembly));
 
 var app = builder.Build();
 
