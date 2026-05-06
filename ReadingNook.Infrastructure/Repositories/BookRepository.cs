@@ -52,5 +52,19 @@ namespace ReadingNook.Infrastructure.Repositories
                 await _context.SaveChangesAsync();
             }
         }
+
+        public async Task AddSessionAsync(ReadingSession session)
+        {
+            await _context.ReadingSessions.AddAsync(session);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<ReadingSession>> GetSessionsForBookAsync(int bookId)
+        {
+            return await _context.ReadingSessions
+                .Where(s => s.BookId == bookId)
+                .OrderBy(s => s.ReadOn)
+                .ToListAsync();
+        }
     }
 }
