@@ -12,5 +12,8 @@ namespace ReadingNook.Domain.Interfaces
         Task AddAsync(Book book);
         Task UpdateAsync(Book book);
         Task DeleteAsync(int id);
+
+        Task AddSessionAsync(ReadingSession session);
+        Task<IEnumerable<ReadingSession>> GetSessionsForBookAsync(int BookId);
     }
 }

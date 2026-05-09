@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Azure.Core;
 using MediatR;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using ReadingNook.API.Contracts.Books;
 using ReadingNook.Application.Books.Commands.CreateBook;
 using ReadingNook.Application.Books.Commands.DeleteBook;
 using ReadingNook.Application.Books.Commands.UpdateBook;
@@ -42,9 +44,16 @@ namespace ReadingNook.API.Controllers
         }
 
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> Update(int id, UpdateBookCommand command)
+        public async Task<IActionResult> Update(int id, UpdateBookRequest request)
         {
-            if (id != command.Id) return BadRequest("The Id in URL and body must match");
+            var command = new UpdateBookCommand(
+            id,
+            request.Title,
+            request.Author,
+            request.TotalPages,
+            request.Genre,
+            request.OverallRating
+        );
 
             var success = await _mediator.Send(command);
             return success ? NoContent() : NotFound();
