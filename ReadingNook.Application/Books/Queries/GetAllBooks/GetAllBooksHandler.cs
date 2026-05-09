@@ -1,35 +1,30 @@
-﻿using ReadingNook.Domain.Interfaces;
+﻿using MapsterMapper;
+using MediatR;
+using ReadingNook.Application.DTOs;
+using ReadingNook.Domain.Entities;
+using ReadingNook.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using MediatR;
-using ReadingNook.Application.DTOs;
-using ReadingNook.Domain.Interfaces;
 
 namespace ReadingNook.Application.Books.Queries.GetAllBooks
 {
     public class GetAllBooksHandler : IRequestHandler<GetAllBooksQuery, IEnumerable<BookDto>>
     {
         private readonly IBookRepository _repository;
+        private readonly IMapper _mapper;
 
-        public GetAllBooksHandler(IBookRepository repository)
+        public GetAllBooksHandler(IBookRepository repository, IMapper mapper)
         {
             _repository = repository;
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<BookDto>> Handle(GetAllBooksQuery request, CancellationToken cansellationToken)
         {
             var books = await _repository.GetAllAsync();
 
-            return books.Select(book => new BookDto
-            {
-                Id = book.Id,
-                Title = book.Title,
-                Author = book.Author,
-                TotalPages = book.TotalPages,
-                Genre = book.Genre,
-                OverallRating = book.OverallRating
-            });
+            return _mapper.Map<IEnumerable<BookDto>>(books);
         }
     }
 }

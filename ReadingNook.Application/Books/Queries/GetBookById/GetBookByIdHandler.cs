@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using MapsterMapper;
 using MediatR;
 using ReadingNook.Application.DTOs;
 using ReadingNook.Domain.Interfaces;
@@ -10,10 +11,12 @@ namespace ReadingNook.Application.Books.Queries.GetBookById
     public class GetBookByIdHandler : IRequestHandler<GetBookByIdQuery, BookDto?>
     {
         private readonly IBookRepository _repository;
+        private readonly IMapper _mapper;
 
-        public GetBookByIdHandler(IBookRepository repository)
+        public GetBookByIdHandler(IBookRepository repository, IMapper mapper)
         {
             _repository = repository;
+            _mapper = mapper;
         }
 
         public async Task<BookDto?> Handle(GetBookByIdQuery request, CancellationToken cancellationToken)
@@ -22,15 +25,7 @@ namespace ReadingNook.Application.Books.Queries.GetBookById
 
             if (book == null) return null;
 
-            return new BookDto
-            {
-                Id = book.Id,
-                Title = book.Title,
-                Author = book.Author,
-                TotalPages = book.TotalPages,
-                Genre = book.Genre,
-                OverallRating = book.OverallRating
-            };
+            return _mapper.Map<BookDto>(book);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using MapsterMapper;
+using MediatR;
 using ReadingNook.Application.DTOs;
 using ReadingNook.Domain.Entities;
 using ReadingNook.Domain.Interfaces;
@@ -11,10 +12,12 @@ namespace ReadingNook.Application.Sessions.Commands.LogSession
     public class LogSessionCommandHandler : IRequestHandler<LogSessionCommand, SessionDto?>
     {
         private readonly IBookRepository _repository;
+        private readonly IMapper _mapper;
 
-        public LogSessionCommandHandler(IBookRepository repository)
+        public LogSessionCommandHandler(IBookRepository repository, IMapper mapper)
         {
             _repository = repository;
+            _mapper = mapper;
         }
 
         public async Task<SessionDto?> Handle(LogSessionCommand request, CancellationToken cancellationToken)
@@ -33,15 +36,7 @@ namespace ReadingNook.Application.Sessions.Commands.LogSession
 
             await _repository.AddSessionAsync(session);
 
-            return new SessionDto
-            {
-                Id = session.Id,
-                ReadOn = session.ReadOn,
-                CurrentPage = session.CurrentPage,
-                MarkedAsFinished = session.MarkedAsFinished,
-                Notes = session.Notes,
-                BookId = session.BookId
-            };
+            return _mapper.Map<SessionDto>(session);
         }
     }
 }

@@ -1,3 +1,5 @@
+using Mapster;
+using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using ReadingNook.Application.Books.Commands.CreateBook;
 using ReadingNook.Domain.Interfaces;
@@ -25,6 +27,13 @@ builder.Services.AddScoped<IBookRepository, BookRepository>();
 
 builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(typeof(CreateBookCommand).Assembly));
+
+// Mapster configuration
+var typeAdapterConfig = new TypeAdapterConfig();
+typeAdapterConfig.Scan(typeof(MappingProfile).Assembly);
+
+builder.Services.AddSingleton(typeAdapterConfig);
+builder.Services.AddScoped<IMapper, ServiceMapper>();
 
 var app = builder.Build();
 
