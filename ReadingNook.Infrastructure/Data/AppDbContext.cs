@@ -14,6 +14,7 @@ namespace ReadingNook.Infrastructure.Data
 
         public DbSet<Book> Books => Set<Book>();
         public DbSet<ReadingSession> ReadingSessions => Set<ReadingSession>();
+        public DbSet<AppUser> Users => Set<AppUser>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
