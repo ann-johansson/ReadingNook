@@ -1,5 +1,6 @@
 ﻿using Azure.Core;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ReadingNook.API.Contracts.Books;
@@ -23,6 +24,7 @@ namespace ReadingNook.API.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAll()
         {
             var books = await _mediator.Send(new GetAllBooksQuery());
@@ -30,6 +32,7 @@ namespace ReadingNook.API.Controllers
         }
 
         [HttpGet("{id:int}")]
+        [Authorize]
         public async Task<IActionResult> GetById(int id)
         {
             var book = await _mediator.Send(new GetBookByIdQuery(id));
@@ -37,6 +40,7 @@ namespace ReadingNook.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "User,Admin")]
         public async Task<IActionResult> Create(CreateBookCommand command)
         {
             var book = await _mediator.Send(command);
@@ -44,6 +48,7 @@ namespace ReadingNook.API.Controllers
         }
 
         [HttpPut("{id:int}")]
+        [Authorize(Roles = "User,Admin")]
         public async Task<IActionResult> Update(int id, UpdateBookRequest request)
         {
             var command = new UpdateBookCommand(
@@ -60,6 +65,7 @@ namespace ReadingNook.API.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [Authorize(Roles = "User,Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var success = await _mediator.Send(new DeleteBookCommand(id));
