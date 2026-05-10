@@ -1,6 +1,10 @@
+using FluentValidation;
 using Mapster;
 using MapsterMapper;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
+using ReadingNook.API.Filters;
+using ReadingNook.Application.Behaviors;
 using ReadingNook.Application.Books.Commands.CreateBook;
 using ReadingNook.Domain.Interfaces;
 using ReadingNook.Infrastructure.Data;
@@ -9,8 +13,11 @@ using ReadingNook.Infrastructure.Repositories;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<ValidationExceptionFilter>();
+});
 
-builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
@@ -25,8 +32,15 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // Dependency injection for repositories
 builder.Services.AddScoped<IBookRepository, BookRepository>();
 
+// FluentValidation
+builder.Services.AddValidatorsFromAssembly(typeof(CreateBookCommandValidator).Assembly);
+
+// MediatR with Pipeline Behaviors
 builder.Services.AddMediatR(cfg =>
-    cfg.RegisterServicesFromAssembly(typeof(CreateBookCommand).Assembly));
+{
+    cfg.RegisterServicesFromAssembly(typeof(CreateBookCommand).Assembly);
+    cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
+});
 
 // Mapster configuration
 var typeAdapterConfig = new TypeAdapterConfig();
@@ -34,6 +48,7 @@ typeAdapterConfig.Scan(typeof(MappingProfile).Assembly);
 
 builder.Services.AddSingleton(typeAdapterConfig);
 builder.Services.AddScoped<IMapper, ServiceMapper>();
+
 
 var app = builder.Build();
 
