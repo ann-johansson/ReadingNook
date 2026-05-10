@@ -26,7 +26,7 @@ namespace ReadingNook.Application.Books.Commands.CreateBook
             {
                 Title = request.Title,
                 Author = request.Author,
-                TotalPages = request.totalPages,
+                TotalPages = request.TotalPages,
                 Genre = request.Genre
             };
 

@@ -9,6 +9,6 @@ namespace ReadingNook.Application.Books.Commands.CreateBook
     public record CreateBookCommand(
         string Title,
         string Author,
-        int totalPages,
+        int TotalPages,
         string Genre) : IRequest<BookDto>;
 }
